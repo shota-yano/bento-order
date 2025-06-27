@@ -6,3 +6,9 @@ test('renders welcome message', () => {
   const header = screen.getByText(/Welcome to Bento Order/i);
   expect(header).toBeInTheDocument();
 });
+
+test('renders reserve button', () => {
+  render(<App />);
+  const button = screen.getByRole('button', { name: '予約' });
+  expect(button).toBeInTheDocument();
+});

@@ -4,6 +4,10 @@ import './App.css';
 function App() {
   const [menu, setMenu] = useState([]);
 
+  const handleReserve = () => {
+    // reservation handling will be implemented later
+  };
+
   useEffect(() => {
     const menuUrl = process.env.PUBLIC_URL + '/menu.json';
     fetch(menuUrl)
@@ -23,6 +27,9 @@ function App() {
           </li>
         ))}
       </ul>
+      <button className="reserve-button" onClick={handleReserve}>
+        予約
+      </button>
     </div>
   );
 }

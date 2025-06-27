@@ -1,4 +1,13 @@
 .App {
   text-align: center;
   padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.reserve-button {
+  margin-top: auto;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
 }
