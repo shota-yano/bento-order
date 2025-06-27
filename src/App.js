@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
 function App() {
   const [menu, setMenu] = useState([]);
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
@@ -29,14 +31,13 @@ function App() {
     <div className="App">
       <h1>Welcome to Bento Order</h1>
       <div className="date-picker">
-        <label>
-          注文日:
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </label>
+        <label htmlFor="order-date">注文日:</label>
+        <DatePicker
+          id="order-date"
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="yyyy-MM-dd"
+        />
       </div>
       {selectedDate ? (
         <>
