@@ -5,7 +5,8 @@ function App() {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    fetch('/menu.json')
+    const menuUrl = process.env.PUBLIC_URL + '/menu.json';
+    fetch(menuUrl)
       .then((res) => res.json())
       .then((data) => setMenu(data))
       .catch((err) => console.error('Failed to load menu:', err));
