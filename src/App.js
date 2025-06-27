@@ -7,6 +7,9 @@ function App() {
   const [menu, setMenu] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
+  const handleReserve = () => {
+    // TODO: implement reservation logic
+  };
 
   useEffect(() => {
     const menuUrl = process.env.PUBLIC_URL + '/menu.json';
@@ -61,6 +64,7 @@ function App() {
       ) : (
         <p>まずは注文したい日を選択してください。</p>
       )}
+      <button className="reserve-button" onClick={handleReserve}>予約</button>
     </div>
   );
 }

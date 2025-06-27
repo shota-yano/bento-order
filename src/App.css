@@ -6,3 +6,12 @@
 .date-picker {
   margin-bottom: 1.5rem;
 }
+
+.reserve-button {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
