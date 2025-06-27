@@ -22,6 +22,7 @@ test('calculates total price when menu items are selected', async () => {
 
   const dateInput = screen.getByLabelText(/注文日/);
   fireEvent.change(dateInput, { target: { value: '2023-01-01' } });
+  fireEvent.blur(dateInput);
 
   await waitFor(() => expect(screen.getByText(/テスト弁当/)).toBeInTheDocument());
 
