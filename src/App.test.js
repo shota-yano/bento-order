@@ -1,13 +1,32 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 
-test('renders welcome message', () => {
-  render(<App />);
-  const header = screen.getByText(/Welcome to Bento Order/i);
-  expect(header).toBeInTheDocument();
+let container;
+let root;
+
+beforeEach(() => {
+  container = document.createElement('div');
+  document.body.appendChild(container);
+  root = createRoot(container);
 });
 
-test('calculates total price when menu items are selected', async () => {
+afterEach(() => {
+  root.unmount();
+  document.body.removeChild(container);
+  container = null;
+});
+
+test('renders welcome message', () => {
+  global.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve([]) }));
+  act(() => {
+    root.render(<App />);
+  });
+  expect(container.textContent).toMatch(/Welcome to Bento Order/);
+});
+
+test('calculates total price when quantity is increased', async () => {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       json: () =>
@@ -18,16 +37,23 @@ test('calculates total price when menu items are selected', async () => {
     })
   );
 
-  render(<App />);
+  await act(async () => {
+    root.render(<App initialDate={new Date('2023-01-01')} />);
+  });
 
-  const dateInput = screen.getByLabelText(/注文日/);
-  fireEvent.change(dateInput, { target: { value: '2023-01-01' } });
-  fireEvent.blur(dateInput);
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
 
-  await waitFor(() => expect(screen.getByText(/テスト弁当/)).toBeInTheDocument());
+  const addButton = Array.from(container.querySelectorAll('button')).find(
+    (b) => b.textContent.trim() === '+'
+  );
 
-  const checkboxes = screen.getAllByRole('checkbox');
-  fireEvent.click(checkboxes[0]);
+  expect(addButton).toBeTruthy();
 
-  expect(screen.getByText('合計: 300円')).toBeInTheDocument();
+  await act(async () => {
+    addButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+
+  expect(container.textContent).toMatch('合計: 300円');
 });

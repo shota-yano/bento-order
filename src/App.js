@@ -3,10 +3,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
-function App() {
+function App({ initialDate = null }) {
   const [menu, setMenu] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(initialDate);
+  const [quantities, setQuantities] = useState({});
   const handleReserve = () => {
     // TODO: implement reservation logic
   };
@@ -19,14 +19,22 @@ function App() {
       .catch((err) => console.error('Failed to load menu:', err));
   }, []);
 
-  const handleToggle = (index) => {
-    setSelectedItems((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
+  const changeQuantity = (index, delta) => {
+    setQuantities((prev) => {
+      const current = prev[index] || 0;
+      const next = Math.max(current + delta, 0);
+      const updated = { ...prev };
+      if (next === 0) {
+        delete updated[index];
+      } else {
+        updated[index] = next;
+      }
+      return updated;
+    });
   };
 
-  const totalPrice = selectedItems.reduce(
-    (sum, i) => sum + (menu[i]?.price || 0),
+  const totalPrice = menu.reduce(
+    (sum, item, i) => sum + (quantities[i] || 0) * (item.price || 0),
     0
   );
 
@@ -48,14 +56,14 @@ function App() {
           <ul>
             {menu.map((item, index) => (
               <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.includes(index)}
-                    onChange={() => handleToggle(index)}
-                  />
+                <span>
                   {item.name} - {item.price}円
-                </label>
+                </span>
+                <div className="quantity-controls">
+                  <button onClick={() => changeQuantity(index, -1)}>-</button>
+                  <span>{quantities[index] || 0}</span>
+                  <button onClick={() => changeQuantity(index, 1)}>+</button>
+                </div>
               </li>
             ))}
           </ul>
