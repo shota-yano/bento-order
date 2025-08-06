@@ -64,18 +64,17 @@ function App({ initialDate = null }) {
       {selectedDate ? (
         <>
           <h2>Menu</h2>
-          <ul>
+          <div className="menu-grid">
             {menu.map((item, index) => (
-              <li key={index}>
-                <span>
-                  {item.name} - {item.price}円
-                </span>
+              <div className="menu-card" key={index}>
+                <h3>{item.name}</h3>
+                <p className="price">{item.price}円</p>
                 <button className="add-button" onClick={() => addToCart(index)}>
                   追加
                 </button>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </>
       ) : (
         <p>まずは注文したい日を選択してください。</p>
