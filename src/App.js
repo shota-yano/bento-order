@@ -6,7 +6,8 @@ import './App.css';
 function App({ initialDate = null }) {
   const [menu, setMenu] = useState([]);
   const [selectedDate, setSelectedDate] = useState(initialDate);
-  const [quantities, setQuantities] = useState({});
+  const [cart, setCart] = useState({});
+  const [showCart, setShowCart] = useState(false);
   const handleReserve = () => {
     // TODO: implement reservation logic
   };
@@ -19,8 +20,16 @@ function App({ initialDate = null }) {
       .catch((err) => console.error('Failed to load menu:', err));
   }, []);
 
-  const changeQuantity = (index, delta) => {
-    setQuantities((prev) => {
+  const addToCart = (index) => {
+    setCart((prev) => {
+      const current = prev[index] || 0;
+      return { ...prev, [index]: current + 1 };
+    });
+    setShowCart(true);
+  };
+
+  const changeCartQuantity = (index, delta) => {
+    setCart((prev) => {
       const current = prev[index] || 0;
       const next = Math.max(current + delta, 0);
       const updated = { ...prev };
@@ -33,10 +42,12 @@ function App({ initialDate = null }) {
     });
   };
 
-  const totalPrice = menu.reduce(
-    (sum, item, i) => sum + (quantities[i] || 0) * (item.price || 0),
-    0
-  );
+  const cartItems = Object.keys(cart);
+
+  const totalPrice = cartItems.reduce((sum, key) => {
+    const i = Number(key);
+    return sum + (cart[i] || 0) * (menu[i]?.price || 0);
+  }, 0);
 
   return (
     <div className="App">
@@ -59,18 +70,37 @@ function App({ initialDate = null }) {
                 <span>
                   {item.name} - {item.price}円
                 </span>
-                <div className="quantity-controls">
-                  <button onClick={() => changeQuantity(index, -1)}>-</button>
-                  <span>{quantities[index] || 0}</span>
-                  <button onClick={() => changeQuantity(index, 1)}>+</button>
-                </div>
+                <button className="add-button" onClick={() => addToCart(index)}>
+                  追加
+                </button>
               </li>
             ))}
           </ul>
-          <p>合計: {totalPrice}円</p>
         </>
       ) : (
         <p>まずは注文したい日を選択してください。</p>
+      )}
+      {showCart && (
+        <div className="cart-panel">
+          <h3>買い物かご</h3>
+          <ul>
+            {cartItems.map((key) => {
+              const i = Number(key);
+              const item = menu[i];
+              return (
+                <li key={key}>
+                  <span>{item.name}</span>
+                  <div className="quantity-controls">
+                    <button onClick={() => changeCartQuantity(i, -1)}>-</button>
+                    <span>{cart[i]}</span>
+                    <button onClick={() => changeCartQuantity(i, 1)}>+</button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          <p>合計: {totalPrice}円</p>
+        </div>
       )}
       <button className="reserve-button" onClick={handleReserve}>予約</button>
     </div>
