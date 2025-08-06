@@ -27,3 +27,32 @@
   width: 2rem;
   height: 2rem;
 }
+
+.add-button {
+  margin-left: 1rem;
+}
+
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  background: #f9f9f9;
+  border-left: 1px solid #ccc;
+  padding: 1rem;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.cart-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-panel li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}

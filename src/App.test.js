@@ -46,7 +46,7 @@ test('calculates total price when quantity is increased', async () => {
   });
 
   const addButton = Array.from(container.querySelectorAll('button')).find(
-    (b) => b.textContent.trim() === '+'
+    (b) => b.textContent.trim() === '追加'
   );
 
   expect(addButton).toBeTruthy();
